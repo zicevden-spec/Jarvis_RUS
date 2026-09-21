@@ -1,0 +1,27 @@
+﻿# Секреты и локальные настройки
+.env
+*.key
+*.pem
+config.local.*
+
+# Модели (тяжёлые, скачиваются скриптом)
+models/
+*.onnx
+*.gguf
+*.safetensors
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Аудио и логи
+*.wav
+*.mp3
+logs/
+*.log
+
+# Система и редактор
+.vscode/
+Thumbs.db
