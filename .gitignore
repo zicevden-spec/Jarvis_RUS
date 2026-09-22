@@ -25,3 +25,5 @@ logs/
 # Система и редактор
 .vscode/
 Thumbs.db
+
+voices/
