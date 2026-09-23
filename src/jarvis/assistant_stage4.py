@@ -1,4 +1,4 @@
-﻿"""Этап 4-5: полный цикл — слово-активатор, распознавание, быстрая команда или Ollama, голос."""
+﻿"""Полный цикл: слово-активатор, распознавание, быстрая команда / поиск / Ollama, голос."""
 import json
 import queue
 
@@ -6,12 +6,14 @@ import sounddevice as sd
 from vosk import KaldiRecognizer, Model, SetLogLevel
 
 from quick_commands import try_handle
-from brain import ask
+from brain import ask, ask_with_search
+from web_search import search
 from tts_test import speak
 
 SAMPLE_RATE = 16000
 MODEL_PATH = "models/vosk-model-small-ru-0.22"
 WAKE_VARIANTS = ["джарвис", "жарвис", "дарвис", "гарвис", "жар вис"]
+SEARCH_TRIGGERS = ["найди", "поищи", "загугли", "найти информацию", "что нового", "погод"]
 
 audio_q = queue.Queue()
 
@@ -44,6 +46,19 @@ def listen_for_command(model) -> str:
                 return text
 
 
+def answer_for(command: str) -> str:
+    answer = try_handle(command)
+    if answer is not None:
+        return answer
+    if any(w in command.lower() for w in SEARCH_TRIGGERS):
+        print("Ищу в интернете...")
+        results = search(command)
+        print("Думаю над ответом по результатам поиска...")
+        return ask_with_search(command, results)
+    print("Думаю...")
+    return ask(command)
+
+
 def main():
     SetLogLevel(-1)
     model = Model(MODEL_PATH)
@@ -57,10 +72,7 @@ def main():
             print("Команда:", command)
             if command.strip().lower() in {"выход", "стоп"}:
                 break
-            answer = try_handle(command)
-            if answer is None:
-                print("Думаю...")
-                answer = ask(command)
+            answer = answer_for(command)
             print("Ответ:", answer)
             speak(answer)
             while not audio_q.empty():

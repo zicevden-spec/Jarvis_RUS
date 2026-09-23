@@ -5,3 +5,4 @@
 # Этап 5:
 # ollama
 ollama
+ddgs
