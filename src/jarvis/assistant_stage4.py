@@ -1,4 +1,4 @@
-﻿"""Этап 4: полный цикл — слово-активатор, распознавание, быстрая команда, голос."""
+﻿"""Этап 4-5: полный цикл — слово-активатор, распознавание, быстрая команда или Ollama, голос."""
 import json
 import queue
 
@@ -6,6 +6,7 @@ import sounddevice as sd
 from vosk import KaldiRecognizer, Model, SetLogLevel
 
 from quick_commands import try_handle
+from brain import ask
 from tts_test import speak
 
 SAMPLE_RATE = 16000
@@ -58,7 +59,8 @@ def main():
                 break
             answer = try_handle(command)
             if answer is None:
-                answer = "Такую команду я пока не умею, скоро научусь через языковую модель."
+                print("Думаю...")
+                answer = ask(command)
             print("Ответ:", answer)
             speak(answer)
             while not audio_q.empty():

@@ -4,3 +4,4 @@
 # vosk
 # Этап 5:
 # ollama
+ollama

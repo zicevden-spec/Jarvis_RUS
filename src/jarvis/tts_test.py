@@ -9,6 +9,9 @@ VOICE_PATH = "voices/ru_RU-ruslan-medium.onnx"
 
 
 def speak(text: str, out_path: str = "out.wav") -> None:
+    if not text.strip():
+        print("(нечего озвучивать)")
+        return
     voice = PiperVoice.load(VOICE_PATH)
     with wave.open(out_path, "wb") as wav_file:
         voice.synthesize_wav(text, wav_file)
